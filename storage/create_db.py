@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel
 from storage.db import engine
-import models
+import color
+import vote
 
 print("CREATING DB.......")
 

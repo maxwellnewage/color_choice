@@ -1,2 +1,2 @@
+Django~=4.2
 fastapi~=0.89.1
-sqlmodel~=0.0.8

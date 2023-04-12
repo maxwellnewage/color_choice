@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from .models import Vote, Color
 from .serializers import ColorSerializer, VoteSerializer
+from rest_framework.authentication import TokenAuthentication
 
 
 class ColorViewSet(viewsets.ModelViewSet):
@@ -17,6 +18,26 @@ class ColorViewSet(viewsets.ModelViewSet):
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
+    authentication_classes = [TokenAuthentication]
+
+    def create(self, request, *args, **kwargs):
+        serializer = VoteSerializer(data=request.data)
+
+        if serializer.is_valid():
+            color = Color(**request.data['color'])
+
+            serializer.save(user=request.user, color=color)
+            return Response({
+                "success": True,
+                "message": "Voto emitido exitosamente.",
+                "vote": serializer.data
+            }, status=status.HTTP_201_CREATED)
+        else:
+            return Response({
+                "success": False,
+                "message": "Error al emitir Voto!",
+                "vote": serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

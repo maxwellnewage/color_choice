@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vote, Color
+from .models import Vote, Color, User
 
 
 class ColorAdmin(admin.ModelAdmin):
@@ -7,4 +7,5 @@ class ColorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Vote)
+admin.site.register(User)
 admin.site.register(Color, ColorAdmin)

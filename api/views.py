@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render
 from rest_framework import status, viewsets, permissions
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .models import Vote, Color
@@ -57,6 +57,7 @@ def user_auth(request):
 
 
 @api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
 def is_voted(request):
     vote = Vote.objects.filter(user=request.user).first()
 

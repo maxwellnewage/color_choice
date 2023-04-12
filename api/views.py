@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from .models import Vote, Color
 from .serializers import ColorSerializer, VoteSerializer, UserSerializer
 from rest_framework.authentication import TokenAuthentication
-from utils.fake_user_generator import fake_users
+from utils.fake_generators import fake_users, fake_votes
 
 
 class ColorViewSet(viewsets.ModelViewSet):
@@ -99,3 +99,12 @@ def generate_fake_users(request, amount):
     user_serializer_list = [UserSerializer(user).data for user in user_list]
 
     return Response({"users": user_serializer_list})
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
+def generate_fake_votes(request, amount):
+    vote_list = fake_votes(amount)
+    vote_serializer_list = [VoteSerializer(vote).data for vote in vote_list]
+
+    return Response({"votes": vote_serializer_list})

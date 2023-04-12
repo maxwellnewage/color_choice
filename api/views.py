@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.db.models import Count
 from django.shortcuts import render
 from rest_framework import status, viewsets, permissions
 from rest_framework.authtoken.models import Token
@@ -82,15 +83,14 @@ def is_voted(request):
         })
 
 
-# @api_view(['GET'])
-# @permission_classes([permissions.IsAuthenticated])
-# def votes_stats(request):
-#     votes =
-#     votes_by_color = Vote.objects.values('color__name')
-#     result = {}
-#     for vote in votes_by_color:
-#         result[vote['color__name']] = vote['count']
-#     return result
+@api_view(['GET'])
+def votes_stats(request):
+    votes_by_color = Vote.objects.values('color__name').annotate(count=Count('id'))
+    result = {}
+    for vote in votes_by_color:
+        result[vote['color__name']] = vote['count']
+    return Response(result)
+
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAdminUser])

@@ -6,8 +6,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .models import Vote, Color
-from .serializers import ColorSerializer, VoteSerializer
+from .serializers import ColorSerializer, VoteSerializer, UserSerializer
 from rest_framework.authentication import TokenAuthentication
+from utils.fake_user_generator import fake_users
 
 
 class ColorViewSet(viewsets.ModelViewSet):
@@ -79,3 +80,22 @@ def is_voted(request):
             "is_voted": True,
             "message": f"{request.user} ya ha votado el color {vote.color}.",
         })
+
+
+# @api_view(['GET'])
+# @permission_classes([permissions.IsAuthenticated])
+# def votes_stats(request):
+#     votes =
+#     votes_by_color = Vote.objects.values('color__name')
+#     result = {}
+#     for vote in votes_by_color:
+#         result[vote['color__name']] = vote['count']
+#     return result
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
+def generate_fake_users(request, amount):
+    user_list = fake_users(amount)
+    user_serializer_list = [UserSerializer(user).data for user in user_list]
+
+    return Response({"users": user_serializer_list})

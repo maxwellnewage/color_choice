@@ -54,3 +54,19 @@ def user_auth(request):
 
     token, created = Token.objects.get_or_create(user=user)
     return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def is_voted(request):
+    vote = Vote.objects.filter(user=request.user).first()
+
+    if vote is None:
+        return Response({
+            "is_voted": False,
+            "message": f"{request.user} no ha votado.",
+        })
+    else:
+        return Response({
+            "is_voted": True,
+            "message": f"{request.user} ya ha votado el color {vote.color}.",
+        })

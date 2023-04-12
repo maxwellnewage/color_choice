@@ -9,7 +9,7 @@ class UserSerializer(ModelSerializer):
 
 
 class ColorSerializer(ModelSerializer):
-    id = IntegerField()
+    id = IntegerField(read_only=True)
 
     class Meta:
         model = Color
